@@ -10,82 +10,76 @@ class User():
         self.account = todoist.login(self.email, self.password)
 
 class Config():
+    #Todo: Add hash/cypher for password.
+    configFileName = 'todoist.ini'
+    config = configparser.ConfigParser()
 
     def __init__(self):
-        self.default = ['[Todoist Login Config]','\n','Username:','\n','Password:','\n']
-        self.file = self.processConfig() #open('./todoist.ini', 'a+')
-        self.isConfigLegal()
-        #self.file.seek(0, 0)
-        #print("size: " + str(os.stat('./todoist.ini').st_size))
-
-        #This will check if file is too big.
-        # elif os.stat('./todoist.ini').st_size > len("".join(self.file)):
-        #     self.file.seek(0, 0)
-        #     print('Test3: File is larger than default.')
-        #     result = self.file.read().split()
-        #     print(len(result))
-        #     if len(result) < 5:
-        #         print("Test4: File is missing info.")
-        #         return None
-        #     for index, item in enumerate(result):
-        #         print(str(index) + ": " + item)
-        #     User.email = result[2]
-        #     User.password = result[4]
-        #     return self.file.close()
-
-
-
-    def processConfig(self):
         if self.configExist() == False:
             self.createConfig()
-        elif self.isConfigLegal(createConfig()) == False:
-            self.createConfig(truncateFile=True)
+            print(">> Config file not detected, creating config.")
+        self.validateConfig()
 
     def configExist(self):
-        return os.path.isfile('./todoist.ini')
+        return os.path.isfile(self.configFileName)
 
+    def createConfig(self):
+        file = open(self.configFileName, 'w+')
+        self.config["TodoistLoginDetails"] = {'Email': '','Password': ''}
+        with file as configfile:
+            self.config.write(configfile)
 
-    def createConfig(self, truncateFile=False):
-        if truncateFile == False:
-            self.file = open('./todoist.ini', 'a+')
-            self.file.write("".join(self.default))
-            return self.file
-        self.file = open('./todoist.ini', 'w+')
-        self.file.write("".join(self.default))
-        return self.file
+    def validateConfig(self):
+        print(">> Config detected. Validating. ")
+        if self.configSectionCntIsValid() == False:
+            print("Config line count is off. Reverting to default.")
+            self.resetConfig()
+        if self.configHasSection() == False:
+            print("Config is missing section. Reverting to default.")
+            self.resetConfig()
 
-    def isConfigLegal(self, file):
-        result = file.read().split()
-        if len(result) <= 3:
+    def resetConfig(self):
+        open(self.configFileName, 'w').close()
+        self.createConfig()
+
+    def tryRead(self):
+        try:
+            self.config.read(self.configFileName)
+        except configparser.ParsingError as err:
+            print('Could not parse:', err)
+            print('Reverting to default config.')
+            self.resetConfig()
+
+    def configHasSection(self):
+        print(">> configHasSection")
+        header = 'TodoistLoginDetails'
+        #self.config.read(self.configFileName)
+        self.tryRead()
+        if self.config.has_section(header) == True:
+            print(True)
+            return True
+        print(False)
+        return False
+
+    def configSectionCntIsValid(self):
+        print(">> configSectionCntIsValid")
+        #lineNum = [line.rstrip() for line in open(self.configFileName, 'r')]
+        with open(self.configFileName) as fileObject:
+            fileList = [line.rstrip() for line in fileObject]
+        print(fileList)
+        lineNum = 0
+        for item in fileList:
+            if item != '':
+                lineNum = lineNum + 1
+        print(lineNum)
+        if lineNum >= 5:
+            print(False)
             return False
-            print("Config has too many rows. Restoring to default.")
-            self.file = open('./todoist.ini', 'w+')
-            self.file.write("".join(self.default))
+        elif lineNum < 3:
+            print(False)
+            return False
+        print(True)
         return True
 
-
-
-
-    #def checkConfig(self):
-        #Check ini formatting(If length of ini is longer than Header, Usern
-
-
-            #configExist: See if a config file exists
-            #createConfig: Write a new config file
-            #checkConfig: Check config to see...? If empty, if default, or if username and password is present.
-            #getEmail: grab email address from config file
-            #getPassword: get password from config file
-
-
-#activeUser = User('Darius')
-newUser = Config()
-
-#User.Config.checkForINI(self)
-#print(User.email)
-#print(User.password)
-
-# print(activeUser.account.projects)
-# print(userCredentials.printConfig())
-# print(userCredentials.file)
-#print(len("".join(userCredentials.default)))
+newConfig = Config()
 
