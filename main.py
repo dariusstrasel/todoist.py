@@ -83,57 +83,64 @@ class Config():
         print(True)
         return True
 
+
 # newConfig = Config()
+class CRUD:
 
-def operate_entity(operation_type, entity_type):
-    print(">>>operate_entity(" + operation_type + ", " + entity_type + ")")
-    operation_types = {"create": create_entity(entity_type), "read": read_entity(entity_type), "update": update_entity(entity_type), "delete": delete_entity(entity_type)}
+    def __init__(self, operation_type, entity_type):
+        print(self)
+        print(">>>operate_entity(" + operation_type + ", " + entity_type + ")")
+        operation_types = {"create": create_entity(entity_type), "read": read_entity(entity_type), "update": update_entity(entity_type), "delete": delete_entity(entity_type)}
 
-    for option in operation_types.keys():
-        print("Searching... " + option)
-        if option == operation_type:
-            print("Found option... Executing... " + entity_type)
-            return operation_types[option]
-    print("Nothing found...")
-    return None
+        for option in operation_types.keys():
+            print("Searching... " + option)
+            if option == operation_type:
+                print("Found option... Executing... " + entity_type)
+                return operation_types[option]
+        print("Nothing found...")
+        return None
 
-def create_entity(entity_type):
-    print(">>>create_entity(" + entity_type + ")")
-    if entity_type == 'task':
-        print(">entity_type is equal to task.")
-        pass
-        # return create task
-    elif entity_type == 'project':
-        pass
-        # return create project
-    return None
+    def create_entity(entity_type):
+        print(">>>create_entity(" + entity_type + ")")
+        if entity_type == 'task':
+            print(">entity_type is equal to task.")
+            pass
+            # return create task
+        elif entity_type == 'project':
+            pass
+            # return create project
+        return None
 
-def read_entity(entity_type):
-    print(">>>read_entity(" + entity_type + ")")
-    if entity_type == 'task':
-        pass
-        # return read task
-    elif entity_type == 'project':
-        pass
-        # return read project
+    def read_entity(entity_type):
+        print(">>>read_entity(" + entity_type + ")")
+        if entity_type == 'task':
+            pass
+            # return read task
+        elif entity_type == 'project':
+            pass
+            # return read project
 
-def update_entity(entity_type):
-    print(">>>update_entity(" + entity_type + ")")
-    if entity_type == 'task':
-        pass
-        # return update task
-    elif entity_type == 'project':
-        pass
-        # return update project
+    def update_entity(entity_type):
+        print(">>>update_entity(" + entity_type + ")")
+        if entity_type == 'task':
+            pass
+            # return update task
+        elif entity_type == 'project':
+            pass
+            # return update project
 
-def delete_entity(entity_type):
-    print(">>>delete_entity(" + entity_type + ")")
-    if entity_type == 'task':
-        pass
-        # return delete task
-    elif entity_type == 'project':
-        # return delete project
-        pass
+    def delete_entity(entity_type):
+        print(">>>delete_entity(" + entity_type + ")")
+        if entity_type == 'task':
+            pass
+            # return delete task
+        elif entity_type == 'project':
+            # return delete project
+            pass
+
+# Entity.execute('create', 'task', 'Do task')
+
+CRUD.create_entity('task')
 
 operate_entity('create', 'task')
 
